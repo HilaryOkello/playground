@@ -5,11 +5,7 @@ import (
 	"strings"
 )
 
-// function takes str which is string passed at argument one ,contentslice which is filename that  is sliced,and index which is the lenght of character in that string
-// if the index value(lenght of each character in a string) is not equal to 8  the printing of each line of character continues,else loop stop and program is terminated
-// while looping over each character in string  we subtract 32 from  the character location in the contentslice which is the sliced value of content in filename used
-// after obtaining the character,character is splitted using line inorder to print line by line then after printing each line ,we print a new line to separate each line
-func PrintAscii(str string, contentSlice []string, index int, color string, toBeColored string, r string, g string, b string, w bool) {
+func PrintAscii(str string, contentSlice []string, index int, color string, toBeColored string, rgb []string, tbcInStr bool) {
 	if index == 8 {
 		return
 	}
@@ -29,7 +25,12 @@ func PrintAscii(str string, contentSlice []string, index int, color string, toBe
 		character := contentSlice[int(char)-32]
 		character = strings.ReplaceAll(character, "\r\n", "\n")
 		lines := strings.Split(character, "\n")
-		if toBeColored != "" && w {
+		var r, g, b string
+		if len(rgb) == 3 {
+			r, g, b = string(rgb[0]), string(rgb[1]), string(rgb[2])
+		}
+
+		if tbcInStr {
 			startIndex := strings.Index(str, toBeColored)
 			lastIndex := startIndex + len(toBeColored) - 1
 			if i >= startIndex && i <= lastIndex {
@@ -44,14 +45,14 @@ func PrintAscii(str string, contentSlice []string, index int, color string, toBe
 		} else {
 			if color != "" && toBeColored == "" {
 				fmt.Printf("%s%s\033[0m", colors[color], lines[index])
-			} else if r != "" {
+			} else if len(rgb) == 3 && toBeColored == "" {
 				fmt.Printf("\033[38;2;%s;%s;%sm%s\033[0m", r, g, b, lines[index])
 			} else {
 				fmt.Print(lines[index])
 			}
 		}
-
 	}
+
 	fmt.Println()
-	PrintAscii(str, contentSlice, index+1, color, toBeColored, r, g, b, w)
+	PrintAscii(str, contentSlice, index+1, color, toBeColored, rgb, tbcInStr)
 }

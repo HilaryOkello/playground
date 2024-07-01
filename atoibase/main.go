@@ -47,7 +47,7 @@ func validateBase(base string) int {
 	if len(base) < 2 {
 		return 0
 	}
-	baseMap := map[rune]bool{}
+	baseMap := make(map[rune]bool)
 	for _, char := range base {
 		if char == '-' || char == '+' {
 			return 0
